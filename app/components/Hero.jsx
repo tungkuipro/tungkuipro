@@ -1,0 +1,258 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { MessageCircle } from "lucide-react";
+import { useLanguage } from "./LanguageProvider";
+
+const particles = Array.from({ length: 46 }, (_, index) => ({
+  id: index,
+  left: `${(index * 29) % 100}%`,
+  top: `${(index * 47) % 100}%`,
+  size: index % 5 === 0 ? 5 : index % 3 === 0 ? 3 : 2,
+  delay: `${(index % 11) * 0.36}s`,
+  duration: `${5.5 + (index % 8) * 0.45}s`,
+  driftX: `${index % 2 === 0 ? 22 + (index % 6) * 7 : -22 - (index % 6) * 7}px`,
+  driftY: `${-70 - (index % 7) * 16}px`,
+}));
+
+const features = [
+  { icon: "arrival", titleZh: "快速到達", titleEn: "Fast Response", subtitle: "FAST SERVICE" },
+  { icon: "team", titleZh: "專業團隊", titleEn: "Professional Team", subtitle: "PRO TEAM" },
+  { icon: "reliable", titleZh: "高效可靠", titleEn: "Reliable Service", subtitle: "RELIABLE" },
+];
+
+function FeatureIcon({ type }) {
+  const svgProps = {
+    width: 42,
+    height: 42,
+    viewBox: "0 0 64 64",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    className:
+      "h-11 w-11 text-cyan-200 drop-shadow-[0_0_16px_rgba(34,211,238,0.65)] transition duration-300 group-hover:scale-110 group-hover:text-white",
+  };
+
+  const stroke = {
+    stroke: "currentColor",
+    strokeWidth: 2.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+  };
+
+  const icons = {
+    arrival: (
+      <svg {...svgProps}>
+        <path {...stroke} d="M36 6 16 34h15l-3 24 20-31H34l2-21Z" />
+        <path {...stroke} d="M12 48h16" opacity="0.5" />
+        <path {...stroke} d="M9 41h10" opacity="0.7" />
+        <path {...stroke} d="M44 15h8" opacity="0.55" />
+        <path {...stroke} d="M48 22h7" opacity="0.35" />
+      </svg>
+    ),
+    team: (
+      <svg {...svgProps}>
+        <path {...stroke} d="M32 7 52 15v15c0 13-8.5 22.5-20 27-11.5-4.5-20-14-20-27V15l20-8Z" />
+        <circle {...stroke} cx="32" cy="27" r="6" />
+        <path {...stroke} d="M21 44c2.5-6 6.5-9 11-9s8.5 3 11 9" />
+        <path {...stroke} d="M20 20h24" opacity="0.35" />
+        <path {...stroke} d="M23 50h18" opacity="0.45" />
+      </svg>
+    ),
+    reliable: (
+      <svg {...svgProps}>
+        <path {...stroke} d="M32 6 52 24 32 58 12 24 32 6Z" />
+        <path {...stroke} d="M12 24h40" />
+        <path {...stroke} d="M24 24 32 6l8 18" />
+        <path {...stroke} d="M24 24 32 58l8-34" />
+        <path {...stroke} d="M21 43 16 48" opacity="0.45" />
+        <path {...stroke} d="M48 14 54 9" opacity="0.45" />
+      </svg>
+    ),
+  };
+
+  return icons[type] ?? null;
+}
+
+function CallIcon() {
+  return (
+    <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-950/15 bg-slate-950/15 shadow-[inset_0_0_18px_rgba(8,145,178,0.24)]">
+      <span className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/40 via-cyan-100/20 to-transparent opacity-75" />
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 64 64"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="relative h-6.5 w-6.5 text-slate-950 drop-shadow-[0_0_10px_rgba(255,255,255,0.55)]"
+      >
+        <path
+          d="M23 13 17 18c-2.2 1.8-2.8 5-1.4 7.5 6 10.7 14.2 18.9 24.9 24.9 2.5 1.4 5.7.8 7.5-1.4l5-6c1.2-1.5 1.1-3.6-.2-5l-6.2-6.2c-1.4-1.4-3.6-1.5-5.1-.2l-3.4 2.8c-5.5-3.2-9.8-7.5-13-13l2.8-3.4c1.3-1.5 1.2-3.7-.2-5.1L28 12.8c-1.4-1.3-3.5-1.4-5-.2Z"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M40 12c6.4 1.8 10.2 5.6 12 12"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity="0.78"
+        />
+        <path
+          d="M39 21c2.4.8 3.9 2.3 4.7 4.7"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity="0.55"
+        />
+      </svg>
+    </span>
+  );
+}
+
+export default function Hero() {
+  const { language } = useLanguage();
+
+  return (
+    <section
+      id="home"
+      className="relative min-h-screen overflow-hidden bg-[#020812] text-white"
+    >
+      <style jsx>{`
+        @keyframes heroParticleFloat {
+          0% { transform: translate3d(0, 28px, 0) scale(0.65); opacity: 0; }
+          15% { opacity: 0.95; }
+          70% { opacity: 0.62; }
+          100% { transform: translate3d(var(--drift-x), var(--drift-y), 0) scale(1.08); opacity: 0; }
+        }
+
+        @keyframes heroParticlePulse {
+          0%, 100% { box-shadow: 0 0 8px rgba(103, 232, 249, 0.35), 0 0 18px rgba(34, 211, 238, 0.12); }
+          50% { box-shadow: 0 0 16px rgba(103, 232, 249, 0.9), 0 0 34px rgba(34, 211, 238, 0.28); }
+        }
+
+        @keyframes heroScanSweep {
+          0% { transform: translateX(-120%) rotate(12deg); opacity: 0; }
+          15%, 75% { opacity: 0.28; }
+          100% { transform: translateX(140%) rotate(12deg); opacity: 0; }
+        }
+
+        .hero-particle {
+          position: absolute;
+          border-radius: 9999px;
+          background: radial-gradient(circle, rgba(255,255,255,0.96) 0%, rgba(103,232,249,0.95) 34%, rgba(34,211,238,0.14) 72%, transparent 100%);
+          animation: heroParticleFloat var(--duration) ease-in-out infinite, heroParticlePulse 2.6s ease-in-out infinite;
+          animation-delay: var(--delay);
+          pointer-events: none;
+          will-change: transform, opacity;
+        }
+
+        .hero-scan-sweep {
+          position: absolute;
+          inset: -20% auto -20% -18%;
+          width: 24%;
+          background: linear-gradient(90deg, transparent 0%, rgba(103,232,249,0.04) 30%, rgba(103,232,249,0.22) 50%, rgba(103,232,249,0.04) 70%, transparent 100%);
+          filter: blur(1px);
+          animation: heroScanSweep 7s linear infinite;
+          pointer-events: none;
+          z-index: 4;
+        }
+      `}</style>
+
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+      />
+
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black via-black/72 to-black/20" />
+      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#020812] via-transparent to-black/50" />
+      <div className="absolute inset-0 z-[3] bg-[radial-gradient(circle_at_68%_44%,rgba(0,229,255,0.22),transparent_28%),radial-gradient(circle_at_20%_45%,rgba(14,165,233,0.14),transparent_34%)]" />
+      <div className="absolute inset-0 z-[3] opacity-[0.16] [background-image:linear-gradient(rgba(34,211,238,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.22)_1px,transparent_1px)] [background-size:48px_48px]" />
+      <div className="hero-scan-sweep" aria-hidden="true" />
+
+      <div className="absolute inset-0 z-[5] overflow-hidden" aria-hidden="true">
+        {particles.map((particle) => (
+          <span
+            key={particle.id}
+            className="hero-particle"
+            style={{
+              left: particle.left,
+              top: particle.top,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              "--delay": particle.delay,
+              "--duration": particle.duration,
+              "--drift-x": particle.driftX,
+              "--drift-y": particle.driftY,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6 py-28">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.75 }}
+          className="max-w-3xl"
+        >
+          <div className="mb-5 inline-flex items-center gap-3 text-sm font-semibold tracking-[0.28em] text-cyan-300">
+            <span className="h-px w-10 bg-cyan-300/80" />
+            DRAINAGE CLEARANCE EXPERT
+          </div>
+
+          <h1 className="text-5xl font-black leading-none tracking-tight md:text-7xl lg:text-8xl">
+            通渠 PRO
+            <span className="block bg-gradient-to-r from-cyan-200 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_28px_rgba(34,211,238,0.45)]">
+              TUNGKUI PRO
+            </span>
+          </h1>
+
+          <p className="mt-6 text-xl font-semibold text-cyan-100 md:text-2xl">
+            {language === "zh" ? "香港專業喉管疏導專家" : "Professional Drainage Specialist"}
+          </p>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300 md:text-lg">
+            {language === "zh" ? "採用先進高壓水射技術及專業儀器，24小時快速到達；專業解決廚房、浴室及各類喉管堵塞問題。" : "Using advanced high-pressure jetting technology and professional equipment with 24-hour rapid response service for kitchen, bathroom and drainage blockage solutions."}
+          </p>
+
+          <div className="mt-8 grid max-w-xl grid-cols-3 gap-3">
+            {features.map((feature) => (
+              <div
+                key={language === "zh" ? feature.titleZh : feature.titleEn}
+                className="group relative overflow-hidden rounded-xl border border-cyan-300/30 bg-cyan-300/[0.06] px-4 py-4 text-center shadow-[0_0_24px_rgba(34,211,238,0.12)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-200/70 hover:bg-cyan-300/[0.10] hover:shadow-[0_0_34px_rgba(34,211,238,0.28)]"
+              >
+                <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/80 to-transparent" />
+                <div className="absolute left-2 top-2 h-2 w-2 border-l border-t border-cyan-300/60" />
+                <div className="absolute right-2 top-2 h-2 w-2 border-r border-t border-cyan-300/60" />
+                <div className="relative mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-lg border border-cyan-300/20 bg-black/20 shadow-[inset_0_0_18px_rgba(34,211,238,0.12)]">
+                  <FeatureIcon type={feature.icon} />
+                </div>
+                <div className="text-xs font-bold tracking-wider text-cyan-50">{language === "zh" ? feature.titleZh : feature.titleEn}</div>
+                <div className="mt-1 text-[9px] font-semibold tracking-[0.18em] text-cyan-300/70">{feature.subtitle}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="tel:+85297631811"
+              className="group inline-flex items-center justify-center gap-3 rounded-lg bg-cyan-400 px-6 py-3.5 text-center font-bold text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.35)] transition hover:-translate-y-0.5 hover:bg-cyan-300 hover:shadow-[0_0_42px_rgba(34,211,238,0.55)]"
+            >
+              <CallIcon />
+              <span className="tracking-wide">+852 9763 1811</span>
+            </a>
+            <a
+              href="https://wa.me/85297631811?text=您好，我想查詢通渠服務"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan-300/45 bg-black/30 px-7 py-4 font-bold text-cyan-100 backdrop-blur transition hover:border-cyan-200 hover:bg-cyan-300/10"
+            >
+              {language === "zh" ? "WhatsApp 查詢" : "WhatsApp Enquiry"} <MessageCircle size={18} />
+            </a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}

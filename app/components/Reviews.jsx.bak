@@ -1,0 +1,189 @@
+ "use client";
+
+import { motion } from "framer-motion";
+import { Star } from "lucide-react";
+
+const particles = Array.from({ length: 28 }, (_, index) => ({
+  id: index,
+  left: `${(index * 33) % 100}%`,
+  top: `${(index * 57) % 100}%`,
+  size: index % 4 === 0 ? 4 : index % 3 === 0 ? 3 : 2,
+  delay: `${(index % 8) * 0.4}s`,
+  duration: `${5 + (index % 6) * 0.5}s`,
+  drift: `${index % 2 === 0 ? 18 + (index % 5) * 5 : -18 - (index % 5) * 5}px`,
+}));
+
+export default function Reviews({ language = "zh" }) {
+  const reviews = [
+    {
+      nameZh: "陳先生",
+      nameEn: "Mr. Chan",
+      serviceZh: "廚房通渠",
+      serviceEn: "Kitchen Drain",
+      textZh: "廚房鋅盆嚴重堵塞，不到一小時已完全恢復正常，效率非常高。",
+      textEn: "Severe kitchen blockage was cleared within an hour. Very efficient service.",
+    },
+    {
+      nameZh: "黃太",
+      nameEn: "Mrs. Wong",
+      serviceZh: "緊急通渠",
+      serviceEn: "Emergency Service",
+      textZh: "凌晨兩點仍能即時到場，師傅態度專業而且收費合理。",
+      textEn: "Arrived quickly at 2 AM. Professional attitude and fair pricing.",
+    },
+    {
+      nameZh: "李先生",
+      nameEn: "Mr. Lee",
+      serviceZh: "高壓通渠",
+      serviceEn: "High Pressure Jetting",
+      textZh: "使用專業高壓水槍處理多年淤塞問題，效果非常理想。",
+      textEn: "Solved a long-term blockage using professional jetting equipment.",
+    },
+  ];
+
+  return (
+    <section
+      id="reviews"
+      className="relative overflow-hidden bg-[#031018] py-24 text-white"
+    >
+      <style jsx>{`
+        @keyframes particleFloat {
+          0% { transform: translate3d(0,18px,0) scale(.72); opacity:0; }
+          18% { opacity:.9; }
+          72% { opacity:.55; }
+          100% { transform: translate3d(var(--drift),-64px,0) scale(1.05); opacity:0; }
+        }
+
+        @keyframes particlePulse {
+          0%,100% { box-shadow:0 0 8px rgba(103,232,249,.35); }
+          50% { box-shadow:0 0 18px rgba(103,232,249,.9); }
+        }
+
+        @keyframes scanLine {
+          0% { transform:translateY(-120%); opacity:0; }
+          12%,88% { opacity:.95; }
+          100% { transform:translateY(120%); opacity:0; }
+        }
+
+        .review-particle{
+          position:absolute;
+          border-radius:9999px;
+          background:radial-gradient(circle,
+            rgba(255,255,255,.95) 0%,
+            rgba(103,232,249,.95) 32%,
+            rgba(34,211,238,.12) 72%,
+            transparent 100%);
+          animation:
+            particleFloat var(--duration) ease-in-out infinite,
+            particlePulse 2.5s ease-in-out infinite;
+          animation-delay:var(--delay);
+          pointer-events:none;
+        }
+
+        .review-card::before{
+          content:"";
+          position:absolute;
+          inset:-60% 0;
+          background:linear-gradient(
+            180deg,
+            transparent 0%,
+            transparent 42%,
+            rgba(103,232,249,.08) 47%,
+            rgba(103,232,249,.35) 50%,
+            rgba(103,232,249,.08) 53%,
+            transparent 58%,
+            transparent 100%
+          );
+          transform:translateY(-120%);
+          animation:scanLine 5s linear infinite;
+          pointer-events:none;
+          z-index:2;
+        }
+      `}</style>
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,229,255,0.12),transparent_32%),linear-gradient(180deg,rgba(2,19,30,0.2),rgba(2,8,14,0.96))]" />
+      <div className="absolute inset-0 opacity-[0.16] [background-image:linear-gradient(rgba(34,211,238,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.22)_1px,transparent_1px)] [background-size:44px_44px]" />
+
+      <div className="absolute inset-0 overflow-hidden">
+        {particles.map((particle) => (
+          <span
+            key={particle.id}
+            className="review-particle"
+            style={{
+              left: particle.left,
+              top: particle.top,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              "--delay": particle.delay,
+              "--duration": particle.duration,
+              "--drift": particle.drift,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
+        <div className="mb-14 text-center">
+          <div className="mb-3 flex items-center justify-center gap-4 text-cyan-300">
+            <span className="h-px w-10 bg-cyan-300/70" />
+            <span className="text-xs font-semibold tracking-[0.45em]">///</span>
+            <span className="h-px w-10 bg-cyan-300/70" />
+          </div>
+
+          <h2 className="text-3xl font-black tracking-[0.12em] md:text-5xl">
+            {language === "zh" ? "客戶評價" : "Customer Reviews"}
+          </h2>
+
+          <p className="mt-2 text-xs font-semibold tracking-[0.42em] text-cyan-200/80">
+            CUSTOMER REVIEWS
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {reviews.map((review, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: index * 0.08 }}
+              whileHover={{ y: -6 }}
+              className="review-card group relative overflow-hidden rounded-xl border border-cyan-300/30 bg-[#061b25]/80 p-8 shadow-[0_0_28px_rgba(0,216,255,0.12)] backdrop-blur transition duration-300 hover:border-cyan-200/70 hover:shadow-[0_0_42px_rgba(0,216,255,0.28)]"
+            >
+              <div className="absolute left-3 top-3 h-3 w-3 border-l border-t border-cyan-300/60" />
+              <div className="absolute right-3 top-3 h-3 w-3 border-r border-t border-cyan-300/60" />
+              <div className="absolute bottom-3 left-3 h-3 w-3 border-b border-l border-cyan-300/60" />
+              <div className="absolute bottom-3 right-3 h-3 w-3 border-b border-r border-cyan-300/60" />
+
+              <div className="relative z-10">
+                <div className="mb-5 flex gap-1 text-cyan-300">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={18} fill="currentColor" strokeWidth={1.5} />
+                  ))}
+                </div>
+
+                <div className="mb-4 inline-flex rounded-full border border-cyan-300/40 bg-cyan-300/10 px-3 py-1 text-[10px] font-bold tracking-[0.18em] text-cyan-200">
+                  {language === "zh" ? review.serviceZh : review.serviceEn}
+                </div>
+
+                <p className="mb-6 text-sm leading-8 text-slate-300">
+                  "{language === "zh" ? review.textZh : review.textEn}"
+                </p>
+
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-white">
+                    {language === "zh" ? review.nameZh : review.nameEn}
+                  </span>
+
+                  <span className="text-xs tracking-[0.18em] text-cyan-300">
+                    VERIFIED
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

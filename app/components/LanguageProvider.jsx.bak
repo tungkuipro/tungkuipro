@@ -1,0 +1,40 @@
+"use client";
+
+import { createContext, useContext, useState } from "react";
+
+const LanguageContext = createContext();
+
+const translations = {
+  zh: {
+    booking: "線上預約",
+    services: "服務項目",
+    gallery: "施工案例",
+    reviews: "客戶評價",
+    contact: "聯絡我們",
+  },
+  en: {
+    booking: "Booking",
+    services: "Services",
+    gallery: "Projects",
+    reviews: "Reviews",
+    contact: "Contact Us",
+  },
+};
+
+export function LanguageProvider({ children }) {
+  const [language, setLanguage] = useState("zh");
+
+  const t = translations[language];
+
+  return (
+    <LanguageContext.Provider
+      value={{ language, setLanguage, t }}
+    >
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext);
+}
