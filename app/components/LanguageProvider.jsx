@@ -10,7 +10,7 @@ import {
 const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState("zh");
+  const [language, setLanguage] = useState("en");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
